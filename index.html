@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Unavvi - 为所欲为的工具导航网站</title>
+		<link rel="shortcut icon" href="resources/logo/favicon.png" type="image/x-icon" />
+		<link rel="bookmark" href="resources/logo/favicon.png" type="image/x-icon"　/>
+		<link type="text/css" rel="stylesheet" href="style/style.css">
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	</head>
+	<body>
+		<header class="center">
+			<a id="logo" class="center border" href="index.html"><h1>UNAVVI</h1></a>
+		</header>
+		<div id="container">
+			<ul v-for="module in content" class="sort">
+				<h2 class="border center">{{module.sort}}</h2>
+				<div class="sort-container">
+					<a v-for="card in module.website" :href="card.address" class="border center card">
+						<div class="border center website-logo">
+							<div class="initial">{{card.name.substr(0, 1)}}</div>
+							<!--<img src="#" />-->
+						</div>
+						<div class="wesite-con">
+							<h3 class="website-name">{{card.name}}</h3>
+							<span class="website-intro">{{card.intro}}</span>
+						</div>
+					</a>
+					<a class="card fill-card"></a>
+					<a class="card fill-card"></a>
+					<a class="card fill-card"></a>
+					<a class="card fill-card"></a>
+				</div>
+			</ul>
+		</div>
+		<footer class="center">
+			<span id="intro">EDIT BY FLY LEWIS</span>
+			<a class="center wechat" href="https://pujivideo.neocities.org/app/code.html">
+				<img src="resources/logo/wechat.svg"></i>
+			</a>
+		</footer>
+		<script type="text/javascript" src="lib/bmob-min.js"></script>
+		<script type="text/javascript">
+			Bmob.initialize("a5a4a2e7a080001a31f1383cae4a3dae", "cf6c4d145fd63bbc2126477702ce8775");
+			var Website = Bmob.Object.extend("Website"),
+				Sort = Bmob.Object.extend("Sort");
+			var website = new Bmob.Query(Website),
+				sort = new Bmob.Query(Sort);
+			var content = [], sorts = [], websites = [];
+			/* 获取分类排序 */
+			sort.ascending("weight").find({
+				success: function(sortRes) {
+					for(var i = 0; i < sortRes.length; i++) {
+						var newSort = {
+							sortId: sortRes[i].id,
+							sortName: sortRes[i].attributes.sortName
+						}
+						sorts.push(newSort);
+					}
+				}
+			});
+
+			/* 获取网页 */
+			website.include("sort").find({
+				success: function(webRes) {
+					for(var i = 0; i < webRes.length; i++) {
+
+						// 获取分类
+						var web = { webId: webRes[i].id,
+									name: webRes[i].attributes.name,
+									address: webRes[i].attributes.address,
+									intro: webRes[i].attributes.intro },
+						sort = webRes[i].attributes.sort.attributes.sortName,
+						sortId = webRes[i].attributes.sort.id;
+						if(content.length == 0) {
+							websites.push(web);
+							var newModule = {
+								sort: sort,
+								sortId: sortId,
+								website: websites
+							};
+							content.push(newModule);
+							websites = [];
+						}
+						else {
+							for(var j = 0; j < content.length; j++) {
+								if(content[j].sortId == sortId) {
+									content[j].website.push(web);
+									break;
+								}
+								else if(j == content.length - 1) {
+									websites.push(web);
+									var newModule = {
+										sort: sort,
+										sortId: sortId,
+										website: websites
+									};
+									content.push(newModule);
+									websites = [];
+									break;
+								}
+							}
+						}
+					}
+
+					/* 分类排序 */
+					for(var i = 0; i < content.length; i++) {
+						for(var j = 0; j < sorts.length; j++) {
+							if(sorts[j].sortId == content[i].sortId) {
+								content.push(content[i]);
+								content.splice(i, 1);
+							}
+						}
+					}
+					var container = new Vue({
+						el: "#container",
+						data: {
+							content: content
+						},
+						mounted: function() {
+							this.$nextTick(function () {
+  							})
+						}
+					});
+				}
+			});
+			
+		</script>
+	</body>
+</html>
