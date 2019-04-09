@@ -25,7 +25,7 @@
 		</header>
 		<div id="container">
 			<ul v-for="module in content" class="sort">
-				<h2 class="border center">{{module.sort}}</h2>
+				<h2 class="border center">{{module.sortName}}</h2>
 				<div class="sort-container">
 					<a v-for="card in module.website" :href="card.address" class="border center card">
 						<div class="border center website-logo">
@@ -37,10 +37,10 @@
 							<span class="website-intro">{{card.intro}}</span>
 						</div>
 					</a>
-					<a class="card fill-card"></a>
-					<a class="card fill-card"></a>
-					<a class="card fill-card"></a>
-					<a class="card fill-card"></a>
+					<a class="border center card fill-card"></a>
+					<a class="border center card fill-card"></a>
+					<a class="border center card fill-card"></a>
+					<a class="border center card fill-card"></a>
 				</div>
 			</ul>
 		</div>
@@ -81,12 +81,12 @@
 									name: webRes[i].attributes.name,
 									address: webRes[i].attributes.address,
 									intro: webRes[i].attributes.intro },
-						sort = webRes[i].attributes.sort.attributes.sortName,
+						sortName = webRes[i].attributes.sort.attributes.sortName,
 						sortId = webRes[i].attributes.sort.id;
 						if(content.length == 0) {
 							websites.push(web);
 							var newModule = {
-								sort: sort,
+								sortName: sortName,
 								sortId: sortId,
 								website: websites
 							};
@@ -102,7 +102,7 @@
 								else if(j == content.length - 1) {
 									websites.push(web);
 									var newModule = {
-										sort: sort,
+										sortName: sortName,
 										sortId: sortId,
 										website: websites
 									};
@@ -115,21 +115,26 @@
 					}
 
 					/* 分类排序 */
-					for(var i = 0; i < content.length; i++) {
-						for(var j = 0; j < sorts.length; j++) {
-							if(sorts[j].sortId == content[i].sortId) {
-								content.push(content[i]);
-								content.splice(i, 1);
+					var conLen = content.length;
+					for(var i = 0; i < sorts.length; i++) {
+						for(var j = 0; j < conLen; j++) {
+							if(sorts[i].sortId == content[j].sortId) {
+								content.push(content[j]);
 							}
 						}
-					}
+					}					
+					content.splice(0, sorts.length);
+
+					/* 渲染 */
 					var container = new Vue({
 						el: "#container",
 						data: {
 							content: content
 						},
 						mounted: function() {
+							/* 首次渲染完成 */
 							this.$nextTick(function () {
+
   							})
 						}
 					});
