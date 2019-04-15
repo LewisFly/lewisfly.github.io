@@ -40,7 +40,7 @@
 					<div class="sortName">产品</div>
 				</h2>
 				<div class="sort-container">
-					<a v-for="card in module.website" :href="card.address" class="border center card hidden" @onclick="_hmt.push(['_trackEvent', 'website', 'card.name'])">
+					<a v-for="card in module.website" :href="card.address" class="border center card hidden" :onclick="card.statistics">
 						<div class="border center website-logo">
 							<div class="initial">{{card.name.substr(0, 1)}}</div>
 							<!--<img src="#" />-->
@@ -117,7 +117,8 @@
 						var web = { webId: webRes[i].id,
 									name: webRes[i].attributes.name,
 									address: webRes[i].attributes.address,
-									intro: webRes[i].attributes.intro },
+									intro: webRes[i].attributes.intro,
+									statistics: "_hmt.push(['_trackEvent', 'website', 'click', '" + webRes[i].attributes.address + "'])" },
 						sortName = webRes[i].attributes.sort.attributes.sortName,
 						sortId = webRes[i].attributes.sort.id;
 						if(content.length == 0) {
