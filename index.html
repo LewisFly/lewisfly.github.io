@@ -3,10 +3,11 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Unavvi - 为所欲为工具导航网站</title>
+		<title>Unavvi - 颜值与实力并重工具导航网站</title>
 		<link rel="shortcut icon" href="resources/logo/favicon.png" type="image/x-icon" />
 		<link rel="bookmark" href="resources/logo/favicon.png" type="image/x-icon"　/>
 		<link type="text/css" rel="stylesheet" href="style/style.css">
+		<script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 		<script>
 		  (function(d) {
@@ -18,6 +19,15 @@
 		    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
 		  })(document);
 		</script>
+		<script>
+			var _hmt = _hmt || [];
+			(function() {
+			  var hm = document.createElement("script");
+			  hm.src = "https://hm.baidu.com/hm.js?3cdfbb50011e2a236f298cc239b9be4b";
+			  var s = document.getElementsByTagName("script")[0]; 
+			  s.parentNode.insertBefore(hm, s);
+			})();
+		</script>
 	</head>
 	<body>
 		<header class="center">
@@ -25,9 +35,12 @@
 		</header>
 		<div id="container">
 			<ul v-for="module in content" class="sort">
-				<h2 class="border center">{{module.sortName}}</h2>
+				<h2 class="border center hidden">{{module.sortName}}</h2>
+				<h2 class="center fill-h2 loading">
+					<div class="sortName">产品</div>
+				</h2>
 				<div class="sort-container">
-					<a v-for="card in module.website" :href="card.address" class="border center card">
+					<a v-for="card in module.website" :href="card.address" class="border center card hidden" @onclick="_hmt.push(['_trackEvent', 'website', 'card.name'])">
 						<div class="border center website-logo">
 							<div class="initial">{{card.name.substr(0, 1)}}</div>
 							<!--<img src="#" />-->
@@ -37,10 +50,34 @@
 							<span class="website-intro">{{card.intro}}</span>
 						</div>
 					</a>
-					<a class="border center card fill-card"></a>
-					<a class="border center card fill-card"></a>
-					<a class="border center card fill-card"></a>
-					<a class="border center card fill-card"></a>
+					<a class="center card fill-card loading">
+						<div class="center website-logo"></div>
+						<div class="wesite-con">
+							<div class="website-name"></div>
+							<div class="website-intro"></div>
+						</div>
+					</a>
+					<a class="center card fill-card loading">
+						<div class="center website-logo"></div>
+						<div class="wesite-con">
+							<div class="website-name"></div>
+							<div class="website-intro"></div>
+						</div>
+					</a>
+					<a class="center card fill-card loading">
+						<div class="center website-logo"></div>
+						<div class="wesite-con">
+							<div class="website-name"></div>
+							<div class="website-intro"></div>
+						</div>
+					</a>
+					<a class="center card fill-card loading">
+						<div class="center website-logo"></div>
+						<div class="wesite-con">
+							<div class="website-name"></div>
+							<div class="website-intro"></div>
+						</div>
+					</a>
 				</div>
 			</ul>
 		</div>
@@ -134,7 +171,8 @@
 						mounted: function() {
 							/* 首次渲染完成 */
 							this.$nextTick(function () {
-
+								$(".loading").removeClass("loading");
+								$(".hidden").removeClass("hidden");
   							})
 						}
 					});
