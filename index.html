@@ -40,7 +40,7 @@
 					<div class="sortName">产品</div>
 				</h2>
 				<div class="sort-container">
-					<a v-for="card in module.website" :href="card.address" class="border center card hidden" :onclick="card.statistics">
+					<a v-for="card in module.website" :href="card.address" class="border center card hidden" :onclick="card.statistics" target="_blank">
 						<div class="border center website-logo">
 							<div class="website-logo-color" :style="{background: card.color}"></div>
 							<div class="initial">{{card.name.substr(0, 1)}}</div>
@@ -109,7 +109,7 @@
 			});
 
 			/* 获取网页 */
-			website.include("sort").find({
+			website.include("sort").ascending("subsort").ascending("name").find({
 				success: function(webRes) {
 					for(var i = 0; i < webRes.length; i++) {
 

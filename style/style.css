@@ -93,6 +93,7 @@ h2 {
 	visibility: hidden;
 	height: 0;
 	margin: 0 10px;
+	border: 4px solid #000;
 }
 .website-logo {
 	position: relative;
