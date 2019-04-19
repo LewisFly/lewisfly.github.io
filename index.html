@@ -9,6 +9,8 @@
 		<link type="text/css" rel="stylesheet" href="style/style.css">
 		<script type="application/javascript" src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script type="application/javascript" src="lib/pinyin_dict_firstletter.js"></script>
+		<script type="application/javascript" src="lib/pinyinUtil.js"></script>
 		<script>
 		  (function(d) {
 		    var config = {
@@ -43,10 +45,10 @@
 					<a v-for="card in module.website" :href="card.address" class="border center card hidden" :onclick="card.statistics" target="_blank">
 						<div class="border center website-logo">
 							<div class="website-logo-color" :style="{background: card.color}"></div>
-							<div class="initial">{{card.name.substr(0, 1)}}</div>
+							<div class="initial">{{pinyinUtil.getFirstLetter(card.name.substr(0, 1).toUpperCase())}}</div>
 						</div>
 						<div class="wesite-con">
-							<h3 class="website-name" :style="{color: card.color}">{{card.name}}</h3>
+							<h3 class="website-name">{{card.name}}</h3>
 							<span class="website-intro">{{card.intro}}</span>
 						</div>
 					</a>

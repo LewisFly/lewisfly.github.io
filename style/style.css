@@ -105,15 +105,16 @@ h2 {
 }
 .website-logo-color {
 	position: absolute;
-	top: 6px;
-	left: 6px;
+	bottom: 10px;
+	right: 10px;
 	z-index: -1;
-	width: 50px;
-	height: 50px;
+	width: 14px;
+	height: 14px;
 	background: #333;
+	opacity: .6;
 }
 .initial {
-	color: #fff;
+	color: #000;
 }
 .wesite-con {
 	display: flex;
