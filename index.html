@@ -97,6 +97,7 @@
 			var website = new Bmob.Query(Website),
 				sort = new Bmob.Query(Sort);
 			var content = [], sorts = [], websites = [];
+			
 			/* 获取分类排序 */
 			sort.ascending("weight").find({
 				success: function(sortRes) {
