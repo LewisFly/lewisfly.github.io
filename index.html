@@ -26,7 +26,7 @@
 			(function() {
 			  var hm = document.createElement("script");
 			  hm.src = "https://hm.baidu.com/hm.js?3cdfbb50011e2a236f298cc239b9be4b";
-			  var s = document.getElementsByTagName("script")[0]; 
+			  var s = document.getElementsByTagName("script")[0];
 			  s.parentNode.insertBefore(hm, s);
 			})();
 		</script>
@@ -90,98 +90,101 @@
 			</a>
 		</footer>
 		<script type="text/javascript" src="lib/bmob-min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js"></script>
 		<script type="text/javascript">
-			Bmob.initialize("a5a4a2e7a080001a31f1383cae4a3dae", "cf6c4d145fd63bbc2126477702ce8775");
-			var Website = Bmob.Object.extend("Website"),
-				Sort = Bmob.Object.extend("Sort");
-			var website = new Bmob.Query(Website),
-				sort = new Bmob.Query(Sort);
-			var content = [], sorts = [], websites = [];
-			
-			/* 获取分类排序 */
-			sort.ascending("weight").find({
-				success: function(sortRes) {
-					for(var i = 0; i < sortRes.length; i++) {
-						var newSort = {
-							sortId: sortRes[i].id,
-							sortName: sortRes[i].attributes.sortName
-						}
-						sorts.push(newSort);
+			var { Query } = AV;
+			AV.init("qoUzagEgSFnEiqXGwQCA9LFj-gzGzoHsz", "5xHS9v8Skv6A5MXrgCpjw8zd");
+
+			var Website = AV.Object.extend("Website"),
+				Sort = AV.Object.extend("Sort");
+			var website = new AV.Query("Website"),
+				sort = new AV.Query("Sort");
+			var sorts = [];
+
+			/* 获取分类 */
+			sort.ascending("weight").find().then(function(sortRes) {
+				for(var i = 0; i < sortRes.length; i++) {
+					var newSort = {
+						sortId: sortRes[i].id,
+						sortName: sortRes[i].attributes.sortName
 					}
+					sorts.push(newSort);
 				}
 			});
 
 			/* 获取网页 */
-			website.include("sort").ascending("subsort").ascending("name").find({
-				success: function(webRes) {
-					for(var i = 0; i < webRes.length; i++) {
-
-						/* 获取分类 */
-						var web = { webId: webRes[i].id,
-									name: webRes[i].attributes.name,
-									address: webRes[i].attributes.address,
-									intro: webRes[i].attributes.intro,
-									statistics: "_hmt.push(['_trackEvent', 'website', 'click', '" + webRes[i].attributes.address + "'])",
-									color: webRes[i].attributes.color },
-						sortName = webRes[i].attributes.sort.attributes.sortName,
-						sortId = webRes[i].attributes.sort.id;
-						if(content.length == 0) {
-							websites.push(web);
-							var newModule = {
-								sortName: sortName,
-								sortId: sortId,
-								website: websites
-							};
-							content.push(newModule);
-							websites = [];
-						}
-						else {
-							for(var j = 0; j < content.length; j++) {
-								if(content[j].sortId == sortId) {
-									content[j].website.push(web);
-									break;
-								}
-								else if(j == content.length - 1) {
-									websites.push(web);
-									var newModule = {
-										sortName: sortName,
-										sortId: sortId,
-										website: websites
-									};
-									content.push(newModule);
-									websites = [];
-									break;
-								}
+			var webRes = [];
+			website.include(["sort"]);
+  			website.notEqualTo("show", 0).ascending("subsort").addAscending("name").find().then(function(webRes, i) {
+  				var content = [], websites = [];
+				for(var i = 0; i < webRes.length; i++) {
+					/* 获取分类 */
+					var web = { webId: webRes[i].id,
+								name: webRes[i].attributes.name,
+								address: webRes[i].attributes.address,
+								intro: webRes[i].attributes.intro,
+								statistics: "_hmt.push(['_trackEvent', 'website', 'click', '" + webRes[i].attributes.address + "'])",
+								color: webRes[i].attributes.color },
+					sortName = webRes[i].attributes.sort.attributes.sortName,
+					sortId = webRes[i].attributes.sort.id;
+					if(content.length == 0) {
+						websites.push(web);
+						var newModule = {
+							sortName: sortName,
+							sortId: sortId,
+							website: websites
+						};
+						content.push(newModule);
+						websites = [];
+					}
+					else {
+						for(var j = 0; j < content.length; j++) {
+							if(content[j].sortId == sortId) {
+								content[j].website.push(web);
+								break;
+							}
+							else if(j == content.length - 1) {
+								websites.push(web);
+								var newModule = {
+									sortName: sortName,
+									sortId: sortId,
+									website: websites
+								};
+								content.push(newModule);
+								websites = [];
+								break;
 							}
 						}
 					}
-
-					/* 分类排序 */
-					var conLen = content.length;
-					for(var i = 0; i < sorts.length; i++) {
-						for(var j = 0; j < conLen; j++) {
-							if(sorts[i].sortId == content[j].sortId) {
-								content.push(content[j]);
-							}
-						}
-					}					
-					content.splice(0, sorts.length);
-
-					/* 渲染 */
-					var container = new Vue({
-						el: "#container",
-						data: {
-							content: content
-						},
-						mounted: function() {
-							/* 首次渲染完成 */
-							this.$nextTick(function () {
-								$(".loading").removeClass("loading");
-								$(".hidden").removeClass("hidden");
-  							})
-						}
-					});
+					
 				}
+
+				/* 分类排序 */
+				var conLen = content.length;
+				for(var i = 0; i < sorts.length; i++) {
+					for(var j = 0; j < conLen; j++) {
+						if(sorts[i].sortId.toString() == content[j].sortId.toString()) {
+							content.push(content[j]);
+						}
+					}
+				}
+				content.splice(0, conLen);
+
+
+				/* 渲染 */
+				var container = new Vue({
+					el: "#container",
+					data: {
+						content: content
+					},
+					mounted: function() {
+						/* 首次渲染完成 */
+						this.$nextTick(function () {
+							$(".loading").removeClass("loading");
+							$(".hidden").removeClass("hidden");
+							})
+					}
+				});
 			});
 		</script>
 	</body>
