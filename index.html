@@ -103,8 +103,9 @@
 		<script src="https://cdn.jsdelivr.net/npm/leancloud-storage@3.13.2/dist/av-min.js"></script>
 		<script type="text/javascript">
 			var { Query } = AV;
-			AV.init("qoUzagEgSFnEiqXGwQCA9LFj-gzGzoHsz", "5xHS9v8Skv6A5MXrgCpjw8zd",
-				serverURLs: "https://avoscloud.com");
+			AV.init({appId: "qoUzagEgSFnEiqXGwQCA9LFj-gzGzoHsz", 
+				appKey: "5xHS9v8Skv6A5MXrgCpjw8zd",
+				serverURLs: "https://avoscloud.com"});
 
 			var Website = AV.Object.extend("Website"),
 				Sort = AV.Object.extend("Sort");
