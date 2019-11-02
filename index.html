@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Unavvi - 颜值与实力并重工具导航网站</title>
 		<link rel="shortcut icon" href="resources/logo/favicon.png" type="image/x-icon" />
-		<link rel="bookmark" href="resources/logo/favicon.png" type="image/x-icon"　/>
+		<link rel="bookmark" href="resources/logo/favicon.png" type="image/x-icon" />
 		<link type="text/css" rel="stylesheet" href="style/style.css">
 		<script type="application/javascript" src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -107,7 +107,6 @@
 			  appKey: "8EC8lX7TCdu3LxlGgG8JHcG2"
 			});
 
-
 			var Website = AV.Object.extend("Website"),
 				Sort = AV.Object.extend("Sort");
 			var website = new AV.Query("Website"),
@@ -127,20 +126,21 @@
 
 			/* 获取网页 */
 			var webRes = [];
-			website.include(["sort"]);
-  			website.notEqualTo("show", 0).ascending("subsort").addAscending("name").find().then(function(webRes, i) {
-  				var content = [], websites = [];
+			website.include("sort.sortName");
+  			website.notEqualTo("show", 0).ascending("subsort").addAscending("name").find().then(function(webRes) {
+				var content = [], websites = [];
 				for(var i = 0; i < webRes.length; i++) {
 					/* 获取分类 */
+					var webAttr = webRes[i].attributes;
 					var web = { webId: webRes[i].id,
-								name: webRes[i].attributes.name,
-								address: webRes[i].attributes.address,
-								intro: webRes[i].attributes.intro,
-								statistics: "_hmt.push(['_trackEvent', 'website', 'click', '" + webRes[i].attributes.address + "'])",
-								color: webRes[i].attributes.color },
-					sortName = webRes[i].attributes.sort.attributes.sortName,
-					sortId = webRes[i].attributes.sort.id;
-					if(content.length == 0) {
+								name: webAttr.name,
+								address: webAttr.address,
+								intro: webAttr.intro,
+								statistics: "_hmt.push(['_trackEvent', 'website', 'click', '" + webAttr.address + "'])",
+								color: webAttr.color };
+					sortName = webAttr.sort.attributes.sortName;
+					sortId = webAttr.sort.id;
+					if(i == 0) {
 						websites.push(web);
 						var newModule = {
 							sortName: sortName,
@@ -169,7 +169,6 @@
 							}
 						}
 					}
-
 				}
 
 				/* 分类排序 */
@@ -182,8 +181,7 @@
 					}
 				}
 				content.splice(0, conLen);
-
-
+				
 				/* 渲染 */
 				var container = new Vue({
 					el: "#container",
@@ -195,7 +193,7 @@
 						this.$nextTick(function () {
 							$(".loading").removeClass("loading");
 							$(".hidden").removeClass("hidden");
-							})
+						})
 					}
 				});
 			});
