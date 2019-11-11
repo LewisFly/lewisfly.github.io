@@ -126,7 +126,7 @@
 
 			/* 获取网页 */
 			var webRes = [];
-			website.include("sort.sortName");
+			website.include("sort.sortName").limit(1000);
   			website.notEqualTo("show", 0).ascending("subsort").addAscending("name").find().then(function(webRes) {
 				var content = [], websites = [];
 				for(var i = 0; i < webRes.length; i++) {
